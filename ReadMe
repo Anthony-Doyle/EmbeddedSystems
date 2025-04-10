@@ -1,0 +1,3 @@
+This projects objective is to create a filter that can read in a signal from a power line, Filter it, phase shift where nessiscary and output the signal.
+DAC, ADC, Buffers will be used throughout the process.
+
