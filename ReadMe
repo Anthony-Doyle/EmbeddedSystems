@@ -2,3 +2,4 @@ This projects objective is to create a filter that can read in a signal from a p
 DAC, ADC, Buffers will be used throughout the process.
 
 Using a Fir filter over a butterworth to avoid instability
+40 orders neeed for the fir filter
