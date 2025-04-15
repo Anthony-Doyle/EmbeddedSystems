@@ -3,3 +3,16 @@ DAC, ADC, Buffers will be used throughout the process.
 
 Using a Fir filter over a butterworth to avoid instability
 40 orders neeed for the fir filter
+
+#Introduction
+
+#Matlab
+
+#Filter
+
+#Interrupt
+
+#Buffer
+
+#Results
+
