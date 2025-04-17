@@ -4,6 +4,9 @@ DAC, ADC, Buffers will be used throughout the process.
 Using a Fir filter over a butterworth to avoid instability
 40 orders neeed for the fir filter
 
+A second buffer is used, buffer one stores data when reading in, the second stores data to allow the sinewave to be simulated
+
+
 #Introduction
 
 #Matlab
