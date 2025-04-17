@@ -11,26 +11,39 @@ int readADC();
 void initDAC();
 void writeDAC(int value);
 void initSerial(uint32_t baudrate);
-int max(int processed);
-int min(int processed);
-int sinusoidGen(int frequency);
+
+int sinusoidGen(float frequency,int max, int min,float time);
 
 #include <stdio.h>
 #include <stdint.h>
-#define CIRC_BUF_SIZE 64
+#define CIRC_BUF_SIZE1 6400
+#define CIRC_BUF_SIZE2 128
 
 typedef struct {
-	int data[CIRC_BUF_SIZE];
+	int *data;
+    uint32_t size;
 	uint32_t head;
 	uint32_t tail;
 	uint32_t count;
 } circular_buffer;
-circular_buffer sample_buf;
+
+int buffer1_data[CIRC_BUF_SIZE1];
+int buffer2_data[CIRC_BUF_SIZE2];
+
+circular_buffer sample_buf1 = {
+    .data = buffer1_data,   .size = CIRC_BUF_SIZE1,
+    .head = 0,  .tail = 0,  .count =0
+};
+circular_buffer sample_buf2 = {
+    .data = buffer2_data,   .size = CIRC_BUF_SIZE2,
+    .head = 0,  .tail = 0,  .count =0
+};
 
 int filter(int input);
 
 int FREQTIME=0;
 int fs=50*100;//sample rate
+int sinusoid=0;
 
 float b[]={0.0010174,0.0013355,0.0018988,0.0027968,0.0041074,0.0058912,0.0081857,0.011001,0.014318,0.018085,0.022223,0.026622,0.031153,0.035667,0.040007,0.044014,0.047536,0.050435,0.052594,0.053926,0.054376,0.053926,0.052594,0.050435,0.047536,0.044014,0.040007,0.035667,0.031153,0.026622,0.022223,0.018085,0.014318,0.011001,0.0081857,0.0058912,0.0041074,0.0027968,0.0018988,0.0013355,0.0010174};// B and A coefficents of butter filter from matlab
 float a[]={1};
@@ -40,41 +53,53 @@ float y[45]={0};
 int main()
 {
     setup();
-    //int frequency=0;
-    //int previous=0;
-    SysTick->LOAD = (SystemCoreClock/fs)-1; // Systick clock = 80MHz. 80000000/50000 = 1600//sample rate is 1600 counts at a spead of 80MHz
+    float frequency=0;
+    float previous=0; 
+    int max=0; int min=0;
+    static float t =0;
+    int changedirection=1; //Keeps value when ran again
+
+    SysTick->LOAD = (SystemCoreClock/fs)-1; // Systick clock = 80MHz. 80000000/5000 = 16000//sample rate is 16000 counts at a speed of 80MHz
 
 	SysTick->CTRL = 7; // enable systick counter and its interrupts
 	SysTick->VAL = 10; // start from a low number so we don't wait for ages for first interrupt
 	__asm(" cpsie i "); // enable interrupts globally
+
+    int sample;
+    int processed;
     while(1)
     {
-        int sample;
         
-        if (get_circ_buf(&sample_buf, &sample) == 0) {// process the buffer if buffer is not empty
+        if (get_circ_buf(&sample_buf1, &sample) == 0) {// process the buffer if buffer is not empty
 
-            int processed = filter(sample);
-            //int changedirection=0;
-            //if(processed>previous){//filtered value is greater then previous value
-                //max(processed)
-              //  if(changedirection==-1){//if previous was shrinking assume min was found
-                //  changedirection=1;
-                //  frequency=1/(FREQTIME/(SysTick->LOAD));
-                //  FREQTIME=0;
-                //}
-            //}   
-            //else if(processed<previous){//filtered value is less then previous value
-                //min(processed)
-                // if(changedirection==1){//if previous was growing assume man was found
-                //  changedirection=-1;
-                //  frequency=1/(FREQTIME/(SysTick->LOAD));
-                //  FREQTIME=0;  
-                //}
-            //}
-            //previous=processed;
-            //int sinusoid=sinusoidGen(frequency);
-            writeDAC(processed);
+            processed = filter(sample);
+            if(processed>previous&&changedirection==-1){//filtered value is greater then previous value //if new min value doesnt equal the old min value and direction was decreasing  
+                    min=previous;
+                    changedirection=1;
+                    frequency=1/(FREQTIME/16000); //16000 is the ticks between measurments
+                    FREQTIME=0;
+                    //Min is reset and prepare to calculate max
+            }   
+            else if(processed<previous&&changedirection==1){//filtered value is less then previous value //if previous was growing assume max was found
+                max=previous;       // if direction was growing and is now decreasing we can assumine max was just reached 
+                changedirection=-1; //Sets expected slope of sinusoid
+                frequency=1/(FREQTIME/16000);//Time since last max/min is turned to a frequency
+                FREQTIME=0; //Time is reset
+                //Max is reset and prepare to calculate min
+            }
+            previous=processed;
+            if(frequency<20.1){
+                frequency=20;
+            }
+            
+            
         }
+
+        FREQTIME=FREQTIME+1;
+        sinusoid=sinusoidGen(2*frequency,max,min,t); //Frequency is times 2 due to being reset at max an min
+        writeDAC(sinusoid);  
+        t = t+ (1.0f)/fs;
+    
 
         // 
     }
@@ -100,8 +125,7 @@ void setup()
 
 void SysTick_Handler(void) {
     int vin = readADC();
-    put_circ_buf(&sample_buf, vin); // Store sample even if processor is busy
-    //FREQTIME=FREQTIME+1;
+    put_circ_buf(&sample_buf1, vin); // Store sample even if processor is busy
 }
 
 void initADC()
@@ -147,12 +171,12 @@ int filter(int input){
         x[i]=x[i-1];
         y[i]=y[i-1];
     }
-    double f;
+    int f=0;
     int i;
     x[0]=input;// gets new input
-for (i=42;i>-1;i--){
-      f = f + x[i]*b[i] ;// gets new output
-}
+    for (i=42;i>-1;i--){
+        f = f + x[i]*b[i] ;// gets new output
+    }
     y[0]=f;
     return y[0];
 }
@@ -179,17 +203,16 @@ void initSerial(uint32_t baudrate)
 
 void init_circ_buf(circular_buffer *buf)
 {
+    buf->count=0;
 	buf->head=0;
 	buf->tail=0;
 }
 int put_circ_buf(circular_buffer *buf,int c)
 {
-	uint32_t new_head;
-	if (buf->count < CIRC_BUF_SIZE)
+	if (buf->count < buf->size)
 	{
-		new_head=(((buf->head)+1)%CIRC_BUF_SIZE);
 		buf->data[buf->head]=c;
-		buf->head=new_head;
+		buf->head=((buf->head)+1)%buf->size;
 		buf->count++;
 		return 0;	
 	}
@@ -200,13 +223,10 @@ int put_circ_buf(circular_buffer *buf,int c)
 }
 int get_circ_buf(circular_buffer *buf,int *c)
 {
-	uint32_t new_tail;
 	if (buf->count > 0)
 	{
-		new_tail=(((buf->tail)+1)%CIRC_BUF_SIZE);
 		*c=buf->data[buf->tail];
-		buf->data[buf->tail] = '-'; //debug
-		buf->tail=new_tail;
+		buf->tail=(((buf->tail)+1)%buf->size);
 		buf->count--;
 		return 0;	
 	}
@@ -217,21 +237,12 @@ int get_circ_buf(circular_buffer *buf,int *c)
 }
 
 //New Code from project 2
+//Buffer was updated to be more dynamic as a second buffer will be used
 
-int max(int newValue){
-    static int oldValue=0;
 
-    if(newValue>oldValue){// input is growing/ tending towards max
-    }
-    else if(newValue<oldValue){// input is growing/ tending towards min
-    }
-    return 0;
-}
+int sinusoidGen(float frequency, int max,int min, float time){
+    float scale=(max-min)/2;
+    float offset=(max+min)/2;
 
-int min(int x){
-    return 0;
-}
-
-int sinusoidGen(int frequency){
-    return sin(2*3.14159*frequency);
+    return offset+scale*sinf(2*3.14159*frequency*time); // offset+scale*sin(2*pi*f*t)
 }
