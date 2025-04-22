@@ -7,6 +7,8 @@ Using a Fir filter over a butterworth to avoid instability
 A second buffer is used, buffer one stores data when reading in, the second stores data to allow the sinewave to be simulated
 
 Issue caused by systemclock being 4Mhz not 80Mhz as expected which cahnged my frequency calculations, debugger was neeeded to realied and fix the issue
+
+phase shift done using peteniometer to determine how leading or lagging the phase is
 #Introduction
 
 #Matlab
