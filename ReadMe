@@ -1,14 +1,14 @@
 This projects objective is to create a filter that can read in a signal from a power line, Filter it, phase shift where nessiscary and output the signal.
 DAC, ADC, Buffers will be used throughout the process.
 
-Using a Fir filter over a butterworth to avoid instability
-40 orders neeed for the fir filter
-
-A second buffer is used, buffer one stores data when reading in, the second stores data to allow the sinewave to be simulated
-
 Issue caused by systemclock being 4Mhz not 80Mhz as expected which cahnged my frequency calculations, debugger was neeeded to realied and fix the issue
 
 phase shift done using peteniometer to determine how leading or lagging the phase is
+
+L432kc set to run at 80MHz or 12.5ns between executions, to take 50000 sample per second, a sample is taken every 1600 ticks 20us
+To calculate frequency we take 1/(num_of_samples*time_per_sample)
+
+
 #Introduction
 
 #Matlab
