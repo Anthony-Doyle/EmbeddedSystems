@@ -9,9 +9,11 @@ L432kc set to run at 80MHz or 12.5ns between executions, to take 50000 sample pe
 To calculate frequency we take 1/(num_of_samples*time_per_sample)
 
 Project works with resolution issue, DMA must be implemented to allow for increased resolution without systick taking up all the resources of the cpu 
+> This is a quote
+# Table of contents
 
 # Introduction
-
+Th
 
 # Matlab
 
