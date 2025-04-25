@@ -10,15 +10,16 @@ To calculate frequency we take 1/(num_of_samples*time_per_sample)
 
 Project works with resolution issue, DMA must be implemented to allow for increased resolution without systick taking up all the resources of the cpu 
 
-#Introduction
+# Introduction
 
-#Matlab
 
-#Filter
+# Matlab
 
-#Interrupt
+# Filter
 
-#Buffer
+# Interrupt
 
-#Results
+# Buffer
+
+# Results
 
