@@ -8,6 +8,7 @@ phase shift done using peteniometer to determine how leading or lagging the phas
 L432kc set to run at 80MHz or 12.5ns between executions, to take 50000 sample per second, a sample is taken every 1600 ticks 20us
 To calculate frequency we take 1/(num_of_samples*time_per_sample)
 
+Project works with resolution issue, DMA must be implemented to allow for increased resolution without systick taking up all the resources of the cpu 
 
 #Introduction
 
