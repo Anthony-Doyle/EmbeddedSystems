@@ -10,18 +10,28 @@ To calculate frequency we take 1/(num_of_samples*time_per_sample)
 
 Project works with resolution issue, DMA must be implemented to allow for increased resolution without systick taking up all the resources of the cpu 
 > This is a quote
-# Table of contents
+# Specialist embedded systems project
+## Table of contents
 
-# Introduction
-Th
+## Introduction
+The specialist embedded system pick was a sinusoidal generator that would read an excisting noicing and broken sinusoid and repecated as a clean source.
+The phase should be able to be adjusted to allow for voltage control in a power grid.
+There should be a high frequency filter to remove noice from the signal.
+DAC, ADC should be used to read and write a signal allowing for easy storage of units and modification.
+DMA should be used to allow for faster excicution** of code while read and write will be done without slowing the main() code.
+Buffers should be used to store the read units, the filtered units and printf() characters.
 
-# Matlab
+By the completion of the project, a signal should be able to be replicated with the same freqency, maximums, minimums, and an adjustable phase of 180 -> -180 degrees.
+This project will be built around the idea of a power system signal cleaning 
 
-# Filter
 
-# Interrupt
+## Matlab
 
-# Buffer
+## Filter
 
-# Results
+## Interrupt
+
+## Buffer
+
+## Results
 
