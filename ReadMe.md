@@ -36,6 +36,14 @@ This project will be built around the idea of a power system signal cleaning
 ## Filter
 
 ## Interrupt
+Systick was used to read and write at a given sample rate.
+This worked mostly but at higher sample rates the system ran slow as the systick was called before the rest of the code would have completed leading to broken outputs as seen below
+(PUT PICTURE IN OF SLOW AND FAST FS)
+Slow FS lead to accurate outputs but poor resolution.
+
+
+An external timer was used by DMA to allivate the process of systick interupting the main code to run the dac and adc 
+
 
 ## Buffer
 
