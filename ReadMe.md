@@ -86,13 +86,13 @@ As a digial signal process almost all of the adjustments are done in the code.
 
 ## Matlab
 Matlab was used to create a filter aswell as the points for the sinewave table.
+
 ### Filter
 Using butter, a butterworth filter was created to filter out high frequencys
 ![Filter matlab code](https://github.com/user-attachments/assets/a2b89cc2-dc1c-446b-8ff5-ebb18ca380fa)
 ![image](https://github.com/user-attachments/assets/b9865cdc-8eeb-48fb-82f1-e818aa376071)
 
 FIR, High pass and band pass filters were tested but would cause excess computation to achieve the same results or to much attenuention at 50hz, the expected input.
-
 
 ### SinewaveTable
 Creating a sinewave table allows for quick calculation of a sinewave rather then the computationally expensive taylor series which slowed down excucition of the code.
@@ -103,19 +103,13 @@ There needed to be enough samples in the table to allow for a good resolution wi
 ![Table code](https://github.com/user-attachments/assets/375f0ccc-d60e-4950-9f01-10865c6b3ff3)
 ![Table](https://github.com/user-attachments/assets/452c7f46-4951-4134-851a-818696a7e488)
 
-
-## Filter
-The filter used in this project was a butterworth low pass filter.
-An FIR filter was tested but due to how this filter is implemented it took alot more resources to compute for an aduquate attenuation.
-
-
-
-
-## Interrupt
+## Systick
 Systick was used to read and write at a given sample rate.
 A sample rate of 5000hz as it allowed for 100 samples at the 50hz which is the hertz of the Irish power system.
 This sample rate give us a systick interruption every 200uS due to the L432kc 80Mhz speed.
-Within the Systick the ADC and DAC must be called to allow for consistant sampling aswell as a few incremental time based variable.
+To ensure this speed 
+
+Within the Systick the ADC and DAC must be called to allow for consistantly timed sampling aswell as a few incremental time based variable.
 The Systick must be completeted before the next interrupt is called or there would be delays in the sample rate.
 
 
@@ -126,8 +120,18 @@ Slow FS lead to accurate outputs but poor resolution.
 
 An external timer was used by DMA to allivate the process of systick interupting the main code to run the dac and adc 
 
+## Main
+
+## Filter
+The filter used in this project was a butterworth low pass filter.
+An FIR filter was tested but due to how this filter is implemented it took alot more resources to compute for an aduquate attenuation.
+
+## Sinusoid Generator
 
 ## Buffer
 
+## Conclusion
+
 ## Results
 
+##Future Work
