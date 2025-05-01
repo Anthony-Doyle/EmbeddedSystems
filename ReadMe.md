@@ -30,24 +30,34 @@ This project will be built around the idea of a power system signal cleaning
 
 ## Table of contents
 Introduction
+
 Circuit diagram
+
 Matlab
-  Filter
-  SinewaveTable
+--Filter
+--SinewaveTable
+  
 Systick 
-  Error with ADC in systick
+--Error with ADC in systick
+  
 Main
-  GettingVaribles
-  Frequency
-  Phaseshift
+--GettingVaribles
+--Frequency
+--Phaseshift
+  
 Filter
+
 SinusoidGenerator
-  Slow
-  Fast
+--Slow
+--Fast
+  
 Buffers
-  Usecases of buffers
+--Usecases of buffers
+  
 Conclution
+
 Results
+
 FutureWork
 
 
