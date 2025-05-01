@@ -29,6 +29,27 @@ This project will be built around the idea of a power system signal cleaning
 # Clean sinusoidal generator based on a input dirty sinusoid
 
 ## Table of contents
+Introduction
+Circuit diagram
+Matlab
+  Filter
+  SinewaveTable
+Systick 
+  Error with ADC in systick
+Main
+  GettingVaribles
+  Frequency
+  Phaseshift
+Filter
+SinusoidGenerator
+  Slow
+  Fast
+Buffers
+  Usecases of buffers
+Conclution
+Results
+FutureWork
+
 
 ## Introduction
 This goal of this project was to be able to replicate the base values of a sinusoid removing noice and effects.
@@ -61,8 +82,6 @@ Using butter, a butterworth filter was created to filter out high frequencys
 ![image](https://github.com/user-attachments/assets/b9865cdc-8eeb-48fb-82f1-e818aa376071)
 
 FIR, High pass and band pass filters were tested but would cause excess computation to achieve the same results or to much attenuention at 50hz, the expected input.
-
-
 
 
 ### SinewaveTable
