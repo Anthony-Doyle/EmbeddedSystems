@@ -24,19 +24,33 @@ The specialist embedded system pick was a sinusoidal generator that would read a
 The phase should be able to be adjusted to allow for voltage control in a power grid.
 There should be a high frequency filter to remove noice from the signal.
 DAC, ADC should be used to read and write a signal allowing for easy storage of units and modification.
-DMA should be used to allow for faster excicution** of code while read and write will be done without slowing the main() code.
+//DMA should be used to allow for faster excicution** of code while read and write will be done without slowing the main() code.
 Buffers should be used to store the read units, the filtered units and printf() characters.
 
-By the completion of the project, a signal should be able to be replicated with the same freqency, maximums, minimums, and an adjustable phase of 180 -> -180 degrees.
+By the completion of the project, a signal should be able to be replicated with the same frequency, maximums, minimums, and an adjustable phase of 180 -> -180 degrees.
 This project will be built around the idea of a power system signal cleaning 
 
 
 ## Matlab
+Matlab was used to create a filter aswell as the pointsfor the sinewave table.
+
+
 
 ## Filter
+The filter used in this project was a butterworth low pass filter.
+An FIR filter was tested but due to how this filter is implemented it took alot more resources to compute for an aduquate attenuation.
+
+
+
 
 ## Interrupt
 Systick was used to read and write at a given sample rate.
+A sample rate of 5000hz as it allowed for 100 samples at the 50hz which is the hertz of the Irish power system.
+This sample rate give us a systick interruption every 200uS due to the L432kc 80Mhz speed.
+Within the Systick the ADC and DAC must be called to allow for consistant sampling aswell as a few incremental time based variable.
+The Systick must be completeted before the next interrupt is called or there would be delays in the sample rate.
+
+
 This worked mostly but at higher sample rates the system ran slow as the systick was called before the rest of the code would have completed leading to broken outputs as seen below
 (PUT PICTURE IN OF SLOW AND FAST FS)
 Slow FS lead to accurate outputs but poor resolution.
