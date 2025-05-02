@@ -1,58 +1,26 @@
-This projects objective is to create a filter that can read in a signal from a power line, Filter it, phase shift where nessiscary and output the signal.
-DAC, ADC, Buffers will be used throughout the process.
-
-phase shift done using peteniometer to determine how leading or lagging the phase is
-
-L432kc set to run at 80MHz or 12.5ns between executions, to take 50000 sample per second, a sample is taken every 1600 ticks 20us
-To calculate frequency we take 1/(num_of_samples*time_per_sample)
-
-
-
-> This is a quote
-
-The specialist embedded system pick was a sinusoidal generator that would read an excisting noicy and broken sinusoid and repecated as a clean source.
-The phase should be able to be adjusted to allow for voltage control in a power grid.
-There should be a high frequency filter to remove noice from the signal.
-DAC, ADC should be used to read and write a signal allowing for easy storage of units and modification.
-Buffers should be used to store the read units, the filtered units and printf() characters.
-
-By the completion of the project, a signal should be able to be replicated with the same frequency, maximums, minimums, and an adjustable phase of 180 -> -180 degrees.
-This project will be built around the idea of a power system signal cleaning 
-
 
 # Clean sinusoidal generator based on a input dirty sinusoid
 
 ## Table of contents
 [Introduction](https://github.com/Anthony-Doyle/EmbeddedSystems/edit/main/ReadMe.md#clean-sinusoidal-generator-based-on-a-input-dirty-sinusoid)
 
-Circuit diagram
 
-Matlab
---Filter
---SinewaveTable
-  
-Systick 
---Error with ADC in systick
-  
-Main
---GettingVaribles
---Frequency
---Phaseshift
-  
-Filter
-
-SinusoidGenerator
---Slow
---Fast
-  
-Buffers
---Usecases of buffers
-  
-Conclution
-
-Results
-
-FutureWork
+2. [Circuit Diagram](#circuit-diagram)
+3. [Matlab](#matlab)
+   - [Filter](#filter)
+   - [Sinewave Look-Up Table](#sinewave-look-up-table)
+4. [Systick](#systick)
+   - [Error with ADC in Systick](#error-with-adc-in-systick)
+5. [Main](#main)
+   - [Getting Variables](#getting-variables)
+   - [Frequency](#frequency)
+   - [Phase Shift](#phaseshift)
+6. [Filter](#filter-1)
+7. [Sinusoid Generator](#sinusoid-generator)
+8. [Buffers](#buffer)
+9. [Conclusion](#conclusion)
+10. [Results](#results)
+11. [Future Work](#future-work)
 
 
 ## Introduction
@@ -113,7 +81,7 @@ The Systick must be completeted before the next interrupt is called or there wou
 
 ![image](https://github.com/user-attachments/assets/ea603486-568c-42dd-872e-48bf5ba17569)
 
-### ADC error
+### Error with ADC in Systick
 During the process of creating this code, I found that there was data being lost but i couldn't track from where.
 Ititally i believed this was due to the large sinewave generation using "sin()" but that being removed didn't resolve the issue.
 After a discution with my lecturure it was found that there was a delay in when ADC was run cauing ADC to take approximely 60-80uS out of the 200uS available for the complete process.
@@ -186,15 +154,15 @@ A Buffer was used at multiple points through out the coding process.
 ADC, printf and DAC used buffers to avoid losses if the job couldnt emidiatly be completed.
 Due to optomazations in the code buffer 3 was unneeded as the dac had enough time to complete its task emmediatly following the ADC in the systick.
 
-The Buffer contained data, start, end, count and total size of buffer.
+The Buffer contained samples, start, end, count and total size of buffer.
 This allowed the buffer to track its contents and hold enough data to fuction correctly.
-Buffer 1 was able to be reduced in size due to the speed the program ran at by the end of the development.
+Buffer 1 was able to be reduced in size due to optimizations in the program by the end of the development.
 
 ![Setup](https://github.com/user-attachments/assets/a921a22c-f5cf-4eb9-8806-b16c7dbb7b2c)
 
 Below shows the functions associated with the buffer and how data was treated when being fed into and extracted from the buffer.
 The count keeps track of how much data is contained. 
-The head is the most recent added data 
+The head is the most recent added data .
 The tail is the first data in that has yet to be processed.
 This runs on a FIFO system.
 
