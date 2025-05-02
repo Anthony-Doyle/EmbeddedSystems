@@ -2,9 +2,7 @@
 # Clean sinusoidal generator based on a input dirty sinusoid
 
 ## Table of contents
-[Introduction](https://github.com/Anthony-Doyle/EmbeddedSystems/edit/main/ReadMe.md#clean-sinusoidal-generator-based-on-a-input-dirty-sinusoid)
-
-
+1. [Introduction](#introduction)
 2. [Circuit Diagram](#circuit-diagram)
 3. [Matlab](#matlab)
    - [Filter](#filter)
