@@ -10,8 +10,7 @@
 4. [Systick](#systick)
    - [Error with ADC in Systick](#error-with-adc-in-systick)
 5. [Main](#main)
-   - [Getting Variables](#getting-variables)
-   - [Frequency](#frequency)
+   - [Frequency](#frequency-average)
    - [Phase Shift](#phaseshift)
 6. [Filter](#filter-1)
 7. [Sinusoid Generator](#sinusoid-generator)
@@ -118,8 +117,13 @@ To run the code completely after all the optimisation took approximatly 45uS
 ### Frequency Average
 
 
+![image](https://github.com/user-attachments/assets/7c3b55a8-2c88-4775-87f0-92c127eb26d5)
 
-###Phaseshift
+
+### Phaseshift
+
+
+![image](https://github.com/user-attachments/assets/6d7fa169-28cb-426f-9906-a3deef056d51)
 
 ## Filter
 The filter used in this project was a butterworth low pass filter.
