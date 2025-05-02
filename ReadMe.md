@@ -1,16 +1,11 @@
 This projects objective is to create a filter that can read in a signal from a power line, Filter it, phase shift where nessiscary and output the signal.
 DAC, ADC, Buffers will be used throughout the process.
 
-Issue caused by systemclock being 4Mhz not 80Mhz as expected which cahnged my frequency calculations, debugger was neeeded to realied and fix the issue
-
 phase shift done using peteniometer to determine how leading or lagging the phase is
 
 L432kc set to run at 80MHz or 12.5ns between executions, to take 50000 sample per second, a sample is taken every 1600 ticks 20us
 To calculate frequency we take 1/(num_of_samples*time_per_sample)
 
-Project works with resolution issue, DMA must be implemented to allow for increased resolution without systick taking up all the resources of the cpu 
-
-Look up Tables used to reduce resources when calculating the signwave
 
 
 > This is a quote
@@ -19,7 +14,6 @@ The specialist embedded system pick was a sinusoidal generator that would read a
 The phase should be able to be adjusted to allow for voltage control in a power grid.
 There should be a high frequency filter to remove noice from the signal.
 DAC, ADC should be used to read and write a signal allowing for easy storage of units and modification.
-//DMA should be used to allow for faster excicution** of code while read and write will be done without slowing the main() code.
 Buffers should be used to store the read units, the filtered units and printf() characters.
 
 By the completion of the project, a signal should be able to be replicated with the same frequency, maximums, minimums, and an adjustable phase of 180 -> -180 degrees.
@@ -114,8 +108,9 @@ To ensure this speed the systick was loaded with a varible to increment to.
 
 Within the Systick the ADC and DAC must be called to allow for consistantly timed sampling aswell as a few incremental time based variable.
 The sinusoid value was also calculated in the systick which isnt strictly nessiscary but ensure accurate DAC outputs.
-This may slow it down if there is is to much computation 
+This may slow it down if there is is to much computation.
 The Systick must be completeted before the next interrupt is called or there would be delays in the sample rate.
+
 ![image](https://github.com/user-attachments/assets/ea603486-568c-42dd-872e-48bf5ba17569)
 
 ### ADC error
@@ -123,8 +118,14 @@ During the process of creating this code, I found that there was data being lost
 Ititally i believed this was due to the large sinewave generation using "sin()" but that being removed didn't resolve the issue.
 After a discution with my lecturure it was found that there was a delay in when ADC was run cauing ADC to take approximely 60-80uS out of the 200uS available for the complete process.
 This being fixed freed up alot of computation time which I had to try an limit up until then with ADC being reduced to under 20uS with further reductions possible by reducing the delay further
+
 ![ADC code](https://github.com/user-attachments/assets/294542aa-19ae-43d0-9edc-79c74f664e99)
-![Picture of delay being 80uS]()
+
+![TimeWithDelay(0x0f)](https://github.com/user-attachments/assets/77e9aab6-9bc8-4010-b926-a95e86f0d09d) Delay set to 0x0f
+
+![TimeWithDelay(0x07)](https://github.com/user-attachments/assets/cd001de1-5755-495f-949a-9dbfa17e8aae) Delay set to 0x07
+
+![TimeWithDelay(0x01)](https://github.com/user-attachments/assets/ae4a3412-12c8-444a-9767-02d6977907f0) Delay set to 0x01
 
 DMA was looked at to off load the ADC and DAC process but was unneeded due to this reduction in time usage. 
 This would have caused excess complexity which was unneeded for the process.
@@ -143,6 +144,10 @@ This used the systick as a counter in comparison to the sample rate which would 
 All of this was kept inside the if statement which checked if there was any sample in the buffer which again reduced processing time 
 
 ![image](https://github.com/user-attachments/assets/a0c5289d-ad1c-48c1-8e51-500fff2086bf)
+
+To run the code completely after all the optimisation took approximatly 45uS
+
+![Time for full code](https://github.com/user-attachments/assets/cf6171bf-f28f-4adf-a134-18a7516b18cb)
 
 ## Filter
 The filter used in this project was a butterworth low pass filter.
@@ -196,7 +201,21 @@ This runs on a FIFO system.
 ![Functions](https://github.com/user-attachments/assets/7ad4cc6b-a35b-49be-9884-55f5d2918c95)
 
 ## Conclusion
+This project successfully demonstrated the creation of a real-time signal processing system for filtering and phase-shifting a sinusoidal signal. 
+The system achieved its goal of removing noise from the input signal and generating a clean, adjustable-phase output. 
+By leveraging hardware peripherals like ADCs, DACs, and buffers, and applying software optimizations such as the use of look-up tables and the Butterworth filter, the system was able to meet the stringent timing requirements of 5000 samples per second.
+
+The project was able to run efficiently, with the main code execution taking around 40-50 µs per cycle, leaving ample room for further optimization. 
+The successful implementation of phase shift control via a potentiometer also opens up potential for further refinement and use in applications like power grid voltage control.
+
 
 ## Results
 
 ## Future Work
+Further Optimization: There may still be opportunities to optimize the ADC sampling process to reduce delays further, possibly implementing DMA (Direct Memory Access) to offload ADC and DAC processing and avoid additional complexity.
+
+Dynamic Filtering: Introduce adaptive filtering to handle different types of noise or changing conditions in the input signal dynamically.
+
+Increased Sampling Rate: With further hardware resources or optimizations, the system's sample rate could be increased to handle higher-frequency signals for more demanding applications.
+
+Testing in Real-World Scenarios: The next step would involve testing this system in real-world power grid environments, where noisy signals and variable phases are common. This would allow for further refinement and validation of the approach.
