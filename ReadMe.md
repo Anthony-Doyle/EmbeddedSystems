@@ -115,6 +115,12 @@ To run the code completely after all the optimisation took approximatly 45uS
 
 ![Time for full code](https://github.com/user-attachments/assets/cf6171bf-f28f-4adf-a134-18a7516b18cb)
 
+### Frequency Average
+
+
+
+###Phaseshift
+
 ## Filter
 The filter used in this project was a butterworth low pass filter.
 An FIR filter was tested but due to how this filter is implemented it took alot more resources to compute for an aduquate attenuation.
