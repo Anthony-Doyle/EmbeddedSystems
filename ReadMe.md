@@ -64,16 +64,14 @@ FutureWork
 ## Introduction
 This goal of this project was to be able to replicate the base values of a sinusoid removing noice and effects.
 To do this ADCs, DAC, buffers, filters, systick and a sinusoid generator.
-A base sinusoid is read in through ADC channel 6, stored in a buffer, and used to gather required information to created a clean sinusoid.
+A base sinusoid is read in through ADC channel 6(PA1), stored in a buffer, and used to gather required information to created a clean sinusoid.
 The buffer stores samples until it can be filtered and processed to gather the frequency, maximum value, minimum value.
 Using MATLAB a basic low pass filter was designed to remove high frequency noice from the incoming samples.
-A phaseshift is calcualted using a petentiometer which can be adjusted and read using ADC channel 8.
+A phaseshift is calcualted using a petentiometer which can be adjusted and read using ADC channel 8(PA3).
+Once the code was processed, it was output through DAC1(PA4).
 
 Systick was used to allow timing systems within the code. 
 The ADC, DAC, sinusoid generation ,and some varible increments are done within the systick handler.
-
-
-
 
 ## Circuit Diagram
 <img src="https://github.com/user-attachments/assets/23ad9dfc-6cd9-4187-9f12-ff8bcbe39301" alt= "Circuit Diagram" width="500" height="500">
