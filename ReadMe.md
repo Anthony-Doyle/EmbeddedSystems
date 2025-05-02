@@ -29,7 +29,7 @@ This project will be built around the idea of a power system signal cleaning
 # Clean sinusoidal generator based on a input dirty sinusoid
 
 ## Table of contents
-Introduction
+[Introduction](https://github.com/Anthony-Doyle/EmbeddedSystems/edit/main/ReadMe.md#clean-sinusoidal-generator-based-on-a-input-dirty-sinusoid)
 
 Circuit diagram
 
@@ -76,9 +76,9 @@ The ADC, DAC, sinusoid generation ,and some varible increments are done within t
 
 
 ## Circuit Diagram
-![image](https://github.com/user-attachments/assets/23ad9dfc-6cd9-4187-9f12-ff8bcbe39301)
+<img src="https://github.com/user-attachments/assets/23ad9dfc-6cd9-4187-9f12-ff8bcbe39301" alt= "Circuit Diagram" width="500" height="500">
 
-![image](https://github.com/user-attachments/assets/9b4fa2b1-b9f5-4076-8ed2-b20d6f13b07b)
+<img src="https://github.com/user-attachments/assets/9b4fa2b1-b9f5-4076-8ed2-b20d6f13b07b" alt= "Circuit Diagram" width="500" height="500">
 
 The circuit diagram above shows the ease of construction. 
 As a digial signal process almost all of the adjustments are done in the code.
@@ -156,21 +156,46 @@ This allowed for smoother and less noicy processing of the signal in the main lo
 ![image](https://github.com/user-attachments/assets/ca0599b5-90c8-475e-8b03-ee70aa8cfc30)
 
 ## Sinusoid Generator
+To start i created a a fuction which created a sine wave which was scaled and offset using the information gotten from the main(). 
+This worked well as the sinwave could be produced using sin() taken from math.h.
+Scale and offset were gotten from equations using the max and min to find the middle between them and the distance from that middle to each.
 
 ![Slow](https://github.com/user-attachments/assets/26271acf-7726-4ba3-906b-6b0ac3890aee)
 
+This way of calculating a sinewave  is very computationally expecsive as it uses the taylor series. 
+Issues occured as the sinwave is constantly calculated with new values.
+To fix this, a look up table was implemented.
+The lookup table allowed for quick calculations of the sinewave by using truckation.
+The phase value was calculated and used to find the closest phase value for an 8 bit sinwave.
 
 ![FAST](https://github.com/user-attachments/assets/f19d6853-c330-42f7-b326-4cf4a6f864fc)
 
+Due to the truncation, when frequency was changed at the maximum, there was an error that caused massive diviations in the sinwave.
+To fix this the phase was made as accumilitive, this allowed for softer transitions between frequencys. 
+The phaseshift was not an accumilated shift and so must be subtracted and readded to avoid major changes froma small shift.
+An if state wasused to normalze the phase to between 0 and 2pi or 0 and 360 degrees.
+
+A 1.2 multiplier was also given to offset any losses caused by the filter at 50hz. 
+This allowed for accurate reproduction of a sinwave with minimal cost.
 
 ## Buffer
+A Buffer was used at multiple points through out the coding process.
+ADC, printf and DAC used buffers to avoid losses if the job couldnt emidiatly be completed.
+Due to optomazations in the code buffer 3 was unneeded as the dac had enough time to complete its task emmediatly following the ADC in the systick.
+
+The Buffer contained data, start, end, count and total size of buffer.
+This allowed the buffer to track its contents and hold enough data to fuction correctly.
+Buffer 1 was able to be reduced in size due to the speed the program ran at by the end of the development.
 
 ![Setup](https://github.com/user-attachments/assets/a921a22c-f5cf-4eb9-8806-b16c7dbb7b2c)
 
+Below shows the functions associated with the buffer and how data was treated when being fed into and extracted from the buffer.
+The count keeps track of how much data is contained. 
+The head is the most recent added data 
+The tail is the first data in that has yet to be processed.
+This runs on a FIFO system.
 
 ![Functions](https://github.com/user-attachments/assets/7ad4cc6b-a35b-49be-9884-55f5d2918c95)
-
-
 
 ## Conclusion
 
