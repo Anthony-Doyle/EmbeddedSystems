@@ -116,12 +116,27 @@ To run the code completely after all the optimisation took approximatly 45uS
 
 ### Frequency Average
 
+The frequeny updates on average every 200uS with minor changes.
+To allow these slight changes to be smoothed an averager was added.
+This averaer can be done in two ways, Hard coded average or weighed change.
+In the code we can see a hard coded average where 40 of the msot reecent frequencys are stored in an array and average. 
+This helps keep a consistant frequency as the code runs and allows for smooth transisions.
+
+There is also a weighed average which is commeneted out but works much the same where the incomeing frequency has a limited affect on the overall value.
+This keeps the value mostly isolated from single major increases while allowing changes to occur overtime.
+Both work equally well while the weighed average would be a more optimal approch due to limitied computation.
 
 ![image](https://github.com/user-attachments/assets/7c3b55a8-2c88-4775-87f0-92c127eb26d5)
 
 
 ### Phaseshift
 
+A phaseshift code was implemented to allow for a change in phase as desired.
+This would be used to sycronise the input and output signal of the board.
+this is done by reading the PA3 ADC and converting the 0-4096 units to 0-2pi radians which can later be added to the sinusoid calculator.
+This shift is currently done manually but could be automated allowing for automatic phase allignment.
+
+To manually adjust this phase, a potetiometer is twisted which adjsuts the voltage entering PA3.
 
 ![image](https://github.com/user-attachments/assets/6d7fa169-28cb-426f-9906-a3deef056d51)
 
@@ -186,6 +201,27 @@ The successful implementation of phase shift control via a potentiometer also op
 
 
 ## Results
+
+Below are the output from three input frequencys to show how the system reacts
+![TEK00002](https://github.com/user-attachments/assets/39962a51-e8ab-4cb4-af0e-1dd21134a7d4) 18hz input.
+
+At 18hz we see an almost exact match with slite errors in scaling which can be fixed with software equations.
+The above results highlight the percistion of the sinusoid generator as frequency is less then 0.1hz off and phase has been matched.
+
+![TEK00001](https://github.com/user-attachments/assets/3e73eb5f-88d0-4d39-802f-6810e4fc15ec) 95hz input.
+
+At 95hz a slight attenuation is seen due to the filter applied to the samples.
+A small error is once again seen of 0.2hz.
+This error is minor and shows that the generator is accurate at high and low frequencys.
+
+![TEK00000](https://github.com/user-attachments/assets/adf6e505-508c-42d5-b81c-aedb7fe4ce3f) 44hz input.
+
+44hz is close to the 50hz expected as an input.
+A minor error is seen of 0.15hz with a matched phase.
+There is little attenuation seen at 44hz which matches expectations at the cut off frequency was designed to be 100hz.
+
+
+
 
 ## Future Work
 Further Optimization: There may still be opportunities to optimize the ADC sampling process to reduce delays further, possibly implementing DMA (Direct Memory Access) to offload ADC and DAC processing and avoid additional complexity.
